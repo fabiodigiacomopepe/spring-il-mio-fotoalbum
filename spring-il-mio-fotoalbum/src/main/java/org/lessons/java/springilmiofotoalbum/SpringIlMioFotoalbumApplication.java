@@ -2,9 +2,8 @@ package org.lessons.java.springilmiofotoalbum;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication
 public class SpringIlMioFotoalbumApplication {
 
     public static void main(String[] args) {
