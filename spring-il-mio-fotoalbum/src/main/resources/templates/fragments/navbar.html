@@ -1,6 +1,6 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
 <body>
-<nav th:fragment="topNavbar(area)" class="navbar navbar-expand-lg bg-primary navbar-dark">
+<nav th:fragment="topNavbar(area)" class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
 
     <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -20,8 +20,8 @@
                 <!--                </li>-->
             </ul>
             <div class="text-light">
-                <span sec:authentication="name" style="margin-right:15px;"></span>
-                <a th:href="@{/logout}" class="btn btn-light">Logout</a>
+                <span sec:authentication="name" style="margin-right:15px; color: black;"></span>
+                <a th:href="@{/logout}" class="btn btn-dark">Logout</a>
             </div>
         </div>
     </div>
