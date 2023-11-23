@@ -1,6 +1,7 @@
 package org.lessons.java.springilmiofotoalbum.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -10,7 +11,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Per auto-increment
     private Integer id;
-    @NotNull
+    @NotNull(message = "La categoria non può essere nulla")
+    @NotBlank(message = "La categoria non può essere vuota")
     private String name;
 
     public Integer getId() {

@@ -21,9 +21,9 @@
                 th:object="${categoryObj}"
         >
             <h3 style="position: relative; top: 20px; color: white;">Inserisci nome categoria</h3>
-            <div class="d-flex align-items-center" style="margin-bottom: 30px;">
+            <div class="d-flex" style="margin-bottom: 30px; align-items: flex-start">
                 <div th:insert="fragments/components :: formField('text', '', 'name')"></div>
-                <button class="btn btn-primary" type="submit" style="position: relative; top: 12px;">+</button>
+                <button class="btn btn-primary" type="submit" style="position: relative; top: 24px;">+</button>
             </div>
         </form>
     </div>
