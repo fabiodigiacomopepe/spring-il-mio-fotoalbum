@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+<head th:insert="fragments/resources :: headResources('Photo List')"></head>
+<body>
+<nav th:replace="fragments/navbar :: topNavbar('photos')"></nav>
+<div class="container">
+    <!--    <div th:if="${message !=null}" class="alert alert-success alert-dismissible fade show">-->
+    <!--        <span th:text="${message}"></span>-->
+    <!--        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+    <!--    </div>-->
+    <h1 style="margin-top: 40px;">Lista Foto</h1>
+    <div class="d-flex align-items-center justify-content-between">
+        <div class="my-3">
+            <a th:href="@{/photos/create}" class="btn btn-light" sec:authorize="hasAuthority('ADMIN')">Aggiungi nuova
+                foto</a>
+        </div>
+        <form th:action="@{/photos}" method="GET">
+            <div class="input-group">
+                <input
+                        type="text"
+                        placeholder="Cerca per titolo"
+                        class="form-control" name="search"
+                        th:value="${param.search}"
+                >
+                <button class="btn btn-light" style="border: 1px solid black;" type="submit">Cerca</button>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${photoList.empty}" class="alert alert-info" style="margin-top: 30px;">
+        <h2>Nessuna foto presente in lista.</h2>
+    </div>
+
+    <div class="d-flex align-items-center flex-wrap" style="gap: 20px; margin: 30px 0;">
+        <div th:each="photo : ${photoList}" class="card" style="width: calc(100% / 3 - 15px);">
+            <img th:src="${photo.url}" class="card-img-top" th:alt="${photo.title}">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${photo.title}"></h5>
+                <p class="card-text" th:text="${photo.description}"></p>
+            </div>
+            <div class="d-flex justify-content-evenly" style="margin-bottom: 20px;">
+                <a th:href="@{/photos/show/{id}(id=${photo.id})}" class="btn btn-dark">Visualizza</a>
+                <a th:href="@{/photos/edit/{id}(id=${photo.id})}" class="btn btn-dark">Modifica</a>
+                <form method="POST" th:action="@{/photos/delete/{id}(id=${photo.id})}"
+                      onsubmit="return confirm('Sei sicuro?')" sec:authorize="hasAuthority('ADMIN')">
+                    <button type="submit" id="pulsante_elimina" class="btn btn-dark">Elimina</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script th:replace="fragments/resources :: jsResources"></script>
+</body>
+</html>
