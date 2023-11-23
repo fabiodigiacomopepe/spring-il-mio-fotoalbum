@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="isEdit=${photo.id != null}">
+<head th:insert="fragments/resources :: headResources(${isEdit ? 'Photo Edit' : 'Photo Create'})"></head>
+<body>
+<div class="container create">
+    <h1 th:text="${isEdit ? 'Modifica Foto' : 'Aggiungi Foto'}" style="margin-top: 30px;"></h1>
+    <hr>
+    <form
+            th:with="actionUrl=${isEdit ? '/photos/edit/' + photo.id : '/photos/create'}"
+            id="photo-create"
+            method="POST"
+            th:action="@{${actionUrl}}"
+            th:object="${photo}"
+            class="row"
+    >
+        <div class="col-9" th:insert="fragments/components :: formField('text', 'Titolo', 'title')"></div>
+
+        <div class="col-3">
+            <label class="form-label">Visibile</label>
+            <div class="d-flex align-items-center" style="position: relative; top: 8px;">
+                <div class="form-check" style="margin-right: 30px;">
+                    <input class="form-check-input" type="radio" name="visible" id="visible_yes" value="true" checked>
+                    <label class="form-check-label" for="visible_yes">
+                        Sì
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="visible" id="visible_no" value="false">
+                    <label class="form-check-label" for="visible_no">
+                        No
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div th:insert="fragments/components :: formField('text', 'URL Foto', 'url')"></div>
+
+        <div th:insert="fragments/components :: formField('textarea', 'Descrizione', 'description')"></div>
+
+        <h3 style="margin-top: 20px;">Categorie</h3>
+        <div class="form-check" th:each="category : ${categoryList}" style="position: relative; left: 15px;">
+            <input
+                    class="form-check-input"
+                    type="checkbox"
+                    th:value="${category.id}"
+                    th:id="|category_${category.id}|"
+                    th:field="*{categories}">
+            <label class="form-check-label" th:for="|category_${category.id}|"
+                   th:text="${#strings.capitalize(category.name)}"></label>
+        </div>
+
+        <div class="mt-4 mb-5">
+            <button class="btn btn-primary" type="submit">Salva</button>
+            <a th:href="@{/photos}" class="btn btn-primary">Torna indietro</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
