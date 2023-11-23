@@ -20,8 +20,8 @@ public class Photo {
     @NotBlank(message = "La descrizione non può essere vuota")
     @Size(max = 255, message = "La descrizione non può essere più lunga di 255 caratteri")
     private String description;
-    @NotBlank(message = "La foto non può essere vuota")
-    @Size(max = 255, message = "La foto non può essere più lunga di 255 caratteri")
+    @NotBlank(message = "L'URL della foto non può essere vuoto")
+    @Size(max = 255, message = "L'URL della foto non può essere più lungo di 255 caratteri")
     private String url;
     @NotNull(message = "Indicare una visibilità")
     private boolean visible;
