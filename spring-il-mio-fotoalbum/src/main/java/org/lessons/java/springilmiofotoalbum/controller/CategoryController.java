@@ -2,16 +2,16 @@ package org.lessons.java.springilmiofotoalbum.controller;
 
 import jakarta.validation.Valid;
 import org.lessons.java.springilmiofotoalbum.exceptions.CategoryNameUniqueException;
+import org.lessons.java.springilmiofotoalbum.exceptions.CategoryNotFoundException;
 import org.lessons.java.springilmiofotoalbum.model.Category;
 import org.lessons.java.springilmiofotoalbum.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -49,6 +49,25 @@ public class CategoryController {
             // Se non ci riesco (perchè già esiste) ricarico la pagina e ritorno un messaggio
             redirectAttributes.addFlashAttribute("messageFailed", "La categoria '" + formCategory.getName() + "' esiste già");
             return "redirect:/categories";
+        }
+    }
+
+    // Rotta "/categories/delete/id <---(dinamico)" (POST)
+    @PostMapping("/delete/{id}")
+    // Parametri in ingresso:
+    // @PathVariable Integer id -> per gestire quale elemento eliminare
+    // RedirectAttributes redirectAttributes -> attributi che ci sono solo nel redirect
+    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            // Provo a prendere categoria in base a id
+            Category categoryToDelete = categoryService.getCategoryById(id);
+            // Elimino prima relazione con foto e poi categoria
+            categoryService.deleteCategoryWithAssociations(id);
+            // Passo il messaggio durante il redirect
+            redirectAttributes.addFlashAttribute("message", "Categoria '" + categoryToDelete.getName() + "' eliminata correttamente!");
+            return "redirect:/categories";
+        } catch (CategoryNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
 }
