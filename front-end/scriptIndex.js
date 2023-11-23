@@ -67,3 +67,37 @@ submit.addEventListener('click', (event) => {
 
 // Ritorno lista foto
 getPhotos();
+
+// Seleziono FORM
+const form = document.getElementById('formContatto');
+
+// Funzione che parte al click sul pulsante INVIA
+form.addEventListener('submit', async function (event) {
+    // Disattivo comportamento default del pulsante
+    event.preventDefault();
+
+    // Prendo i dati dal form e li salvo in delle variabili
+    const formData = new FormData(form);
+    const senderEmail = formData.get('senderEmail');
+    const body = formData.get('body');
+
+    // Trasformo tutto in JSON
+    const jsonData = {
+        senderEmail: senderEmail,
+        body: body,
+    };
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    // Invio al RestController su Java per creare nuova messaggio
+    try {
+        await axios.post(apiUrl + '/send', JSON.stringify(jsonData), config);
+        window.location.href = '/front-end/index.html';
+    } catch (error) {
+        console.error(error);
+    }
+});
