@@ -1,5 +1,6 @@
 package org.lessons.java.springilmiofotoalbum.service;
 
+import org.lessons.java.springilmiofotoalbum.exceptions.PhotoNotFoundException;
 import org.lessons.java.springilmiofotoalbum.model.Photo;
 import org.lessons.java.springilmiofotoalbum.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,19 @@ public class PhotoService {
         } else {
             // Altrimenti ritorno lista completa
             return photoRepository.findAll();
+        }
+    }
+
+    public Photo getPhotoById(Integer id) throws PhotoNotFoundException {
+        // Salvo in result in modo Optional perchè potrebbe non ritornare nulla
+        Optional<Photo> result = photoRepository.findById(id);
+        // Se il risultato è presente
+        if (result.isPresent()) {
+            // Ritorno la pizza (result.get())
+            return result.get();
+        } else {
+            // Altrimenti lancio eccezione
+            throw new PhotoNotFoundException("Photo with ID " + id + ": Not Found");
         }
     }
 }

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/resources :: headResources('Photo Show')"></head>
+<body style="color: black;">
+<div class="container" th:object="${photo}" style="background-color: white; padding: 20px; margin: 30px auto;">
+    <h1 th:text="*{title}"></h1>
+    <hr>
+    <div class="mt-2" style="margin-bottom: 10px;">
+        <a th:href="@{/photos}" class="btn btn-dark">Torna alla lista</a>
+    </div>
+    <dl class="d-flex align-items-center justify-content-between">
+        <div style="width: 70%; font-size: 25px;">
+            <dt>Descrizione</dt>
+            <dd th:text="*{description}"></dd>
+            <dt>Visibile</dt>
+            <dd th:text="*{visible} ? 'Sì' : 'No'"></dd>
+        </div>
+        <div style="width: 60%">
+            <dd style="margin-right: 35px;">
+                <img style="max-width: 100%; object-fit: cover; border-radius: 20px;"
+                     th:src="*{url}" th:alt="*{title}">
+            </dd>
+        </div>
+    </dl>
+
+    <div class="col-4" style="margin-bottom: 40px;">
+        <h3>Categorie</h3>
+        <ul th:if="*{categories.size() > 0}">
+            <li th:each="category : *{categories}" th:text="${#strings.capitalize(category.name)}"></li>
+        </ul>
+        <div th:unless="*{categories.size() > 0}" class="alert alert-info">La lista delle categorie è vuota</div>
+    </div>
+</div>
+<script th:replace="fragments/resources :: jsResources"></script>
+</body>
+</html>
