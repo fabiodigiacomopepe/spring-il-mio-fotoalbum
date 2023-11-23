@@ -38,4 +38,10 @@ public class PhotoService {
             throw new PhotoNotFoundException("Photo with ID " + id + ": Not Found");
         }
     }
+
+    public Photo createPhoto(Photo photo) throws RuntimeException {
+        // Setto ID foto a null per evitare UPDATE involontario (!!)
+        photo.setId(null);
+        return photoRepository.save(photo);
+    }
 }
