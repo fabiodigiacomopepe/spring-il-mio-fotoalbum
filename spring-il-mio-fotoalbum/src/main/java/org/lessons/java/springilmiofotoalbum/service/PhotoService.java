@@ -44,4 +44,18 @@ public class PhotoService {
         photo.setId(null);
         return photoRepository.save(photo);
     }
+
+    public Photo editPhoto(Photo photo) throws PhotoNotFoundException {
+        // Provo a prendere photo in base a id
+        Photo photoToEdit = getPhotoById(photo.getId());
+        // Valorizzo con i setter i vari parametri passando quelli ricevuti dal form
+        photoToEdit.setTitle(photo.getTitle());
+        photoToEdit.setDescription(photo.getDescription());
+        photoToEdit.setUrl(photo.getUrl());
+        photoToEdit.setVisible(photo.isVisible());
+        photoToEdit.setCategories(photo.getCategories());
+        // Salvo la photo
+        // Metodo .save salva ciò che riceve. Se i campi nel form mancano, li lascia vuoti (non si comporta come update)
+        return photoRepository.save(photoToEdit);
+    }
 }

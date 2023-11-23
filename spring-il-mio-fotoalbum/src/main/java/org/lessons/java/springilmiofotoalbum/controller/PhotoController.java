@@ -69,4 +69,46 @@ public class PhotoController {
         Photo savedPhoto = photoService.createPhoto(formPhoto);
         return "redirect:/photos/show/" + savedPhoto.getId();
     }
+
+    // Rotta "/photos/edit/id <---(dinamico)" (GET)
+    @GetMapping("/edit/{id}")
+    public String editGet(@PathVariable Integer id, Model model) {
+        try {
+            // Passo la photo con il model
+            model.addAttribute("photo", photoService.getPhotoById(id));
+            model.addAttribute("categoryList", categoryService.getAll());
+            return "administrations/create_edit";
+        } catch (PhotoNotFoundException e) {
+            // Altrimenti lancio eccezione
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    // Rotta "/photos/edit/id <---(dinamico)" (POST)
+    @PostMapping("/edit/{id}")
+    // Parametri in ingresso:
+    // @PathVariable Integer id -> per gestire quale elemento modifcare
+    // @Valid -> per validazioni
+    // @ModelAttribute("photo") -> per ritornare stessa photo in caso di errori
+    // Pizza formPhoto -> cioò che ricevo dal form
+    // BindingResult bindingResult -> mappa errori
+    public String editPost(
+            @PathVariable Integer id,
+            @Valid
+            @ModelAttribute("photo")
+            Photo formPhoto,
+            BindingResult bindingResult,
+            Model model) {
+        if (bindingResult.hasErrors()) {
+            // Se ci sono errori ricarico la pagina
+            model.addAttribute("categoryList", categoryService.getAll());
+            return "/administrations/create_edit";
+        }
+        try {
+            Photo savedPhoto = photoService.editPhoto(formPhoto);
+            return "redirect:/photos/show/" + savedPhoto.getId();
+        } catch (PhotoNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
 }

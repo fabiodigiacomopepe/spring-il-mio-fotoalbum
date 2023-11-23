@@ -19,13 +19,15 @@
             <label class="form-label">Visibile</label>
             <div class="d-flex align-items-center" style="position: relative; top: 8px;">
                 <div class="form-check" style="margin-right: 30px;">
-                    <input class="form-check-input" type="radio" name="visible" id="visible_yes" value="true" checked>
+                    <input class="form-check-input" type="radio" name="visible" id="visible_yes" value="true"
+                           th:field="*{visible}">
                     <label class="form-check-label" for="visible_yes">
                         Sì
                     </label>
                 </div>
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="visible" id="visible_no" value="false">
+                    <input class="form-check-input" type="radio" name="visible" id="visible_no" value="false"
+                           th:field="*{visible}">
                     <label class="form-check-label" for="visible_no">
                         No
                     </label>
@@ -50,8 +52,8 @@
         </div>
 
         <div class="mt-4 mb-5">
-            <button class="btn btn-primary" type="submit">Salva</button>
-            <a th:href="@{/photos}" class="btn btn-primary">Torna indietro</a>
+            <button class="btn btn-light" type="submit">Salva</button>
+            <a th:href="@{/photos}" class="btn btn-light">Torna indietro</a>
         </div>
     </form>
 </div>
