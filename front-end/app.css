@@ -1,0 +1,12 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('https://img.freepik.com/free-vector/dark-background-with-dynamic-shapes_23-2148865191.jpg?size=626&ext=jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+}
