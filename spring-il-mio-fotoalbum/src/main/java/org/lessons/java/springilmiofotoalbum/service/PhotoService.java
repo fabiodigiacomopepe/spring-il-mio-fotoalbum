@@ -58,4 +58,8 @@ public class PhotoService {
         // Metodo .save salva ciò che riceve. Se i campi nel form mancano, li lascia vuoti (non si comporta come update)
         return photoRepository.save(photoToEdit);
     }
+
+    public void deletePhoto(Integer id) {
+        photoRepository.deleteById(id);
+    }
 }

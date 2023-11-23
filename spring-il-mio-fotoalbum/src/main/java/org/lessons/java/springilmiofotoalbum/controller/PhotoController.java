@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -107,6 +108,25 @@ public class PhotoController {
         try {
             Photo savedPhoto = photoService.editPhoto(formPhoto);
             return "redirect:/photos/show/" + savedPhoto.getId();
+        } catch (PhotoNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    // Rotta "/photos/delete/id <---(dinamico)" (POST)
+    @PostMapping("/delete/{id}")
+    // Parametri in ingresso:
+    // @PathVariable Integer id -> per gestire quale elemento eliminare
+    // RedirectAttributes redirectAttributes -> attributi che ci sono solo nel redirect
+    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            // Provo a prendere photo in base a id
+            Photo photoToDelete = photoService.getPhotoById(id);
+            // Elimino photo per id
+            photoService.deletePhoto(id);
+            // Passo il messaggio durante il redirect
+            redirectAttributes.addFlashAttribute("message", "Foto '" + photoToDelete.getTitle() + "' eliminata correttamente!");
+            return "redirect:/photos";
         } catch (PhotoNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

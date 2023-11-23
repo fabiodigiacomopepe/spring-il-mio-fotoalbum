@@ -4,10 +4,10 @@
 <body>
 <nav th:replace="fragments/navbar :: topNavbar('photos')"></nav>
 <div class="container">
-    <!--    <div th:if="${message !=null}" class="alert alert-success alert-dismissible fade show">-->
-    <!--        <span th:text="${message}"></span>-->
-    <!--        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
-    <!--    </div>-->
+    <div th:if="${message !=null}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <h1 style="margin-top: 40px;">Lista Foto</h1>
     <div class="d-flex align-items-center justify-content-between">
         <div class="my-3">
