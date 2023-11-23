@@ -17,7 +17,6 @@ public class UserController {
     @GetMapping
     public String index(Model model) {
         model.addAttribute("userList", userRepository.findAll());
-        // return "users/index";
-        return null;
+        return "users/index";
     }
 }

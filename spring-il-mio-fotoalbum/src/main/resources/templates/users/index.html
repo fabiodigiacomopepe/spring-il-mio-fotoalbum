@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/resources :: headResources('Users List')"></head>
+<body>
+<nav th:replace="fragments/navbar :: topNavbar('users')"></nav>
+<div class="container">
+    <h1 style="margin-top: 40px;">Lista Utenti</h1>
+</div>
+<table class="table" style="width: 90%; margin: 25px auto;">
+    <thead>
+    <th>Nome</th>
+    <th>Cognome</th>
+    <th>Email (Username)</th>
+    <th>Ruolo</th>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${userList}">
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.email}"></td>
+        <td><div th:each="role : ${user.roles}" th:text="${role.name}"></div></td>
+    </tr>
+    </tbody>
+</table>
+</div>
+<script th:replace="fragments/resources :: jsResources"></script>
+</body>
+</html>

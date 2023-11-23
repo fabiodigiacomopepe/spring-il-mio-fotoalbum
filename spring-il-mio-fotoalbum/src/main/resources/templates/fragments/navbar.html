@@ -14,10 +14,14 @@
                     <a class="nav-link" th:classAppend="${area == 'photos' ? 'active' : ''}"
                        th:href="@{/photos}">Foto</a>
                 </li>
-                <!--                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">-->
-                <!--                    <a class="nav-link" th:classAppend="${area == 'users' ? 'active' : ''}"-->
-                <!--                       th:href="@{/users}">Utenti</a>-->
-                <!--                </li>-->
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" th:classAppend="${area == 'categories' ? 'active' : ''}"
+                       th:href="@{/categories}">Categorie</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
+                    <a class="nav-link" th:classAppend="${area == 'users' ? 'active' : ''}"
+                       th:href="@{/users}">Utenti</a>
+                </li>
             </ul>
             <div class="text-light">
                 <span sec:authentication="name" style="margin-right:15px; color: black;"></span>
