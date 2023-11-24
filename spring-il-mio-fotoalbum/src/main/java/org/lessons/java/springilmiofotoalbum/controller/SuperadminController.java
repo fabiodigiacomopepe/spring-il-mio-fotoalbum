@@ -2,6 +2,7 @@ package org.lessons.java.springilmiofotoalbum.controller;
 
 import org.lessons.java.springilmiofotoalbum.exceptions.PhotoNotFoundException;
 import org.lessons.java.springilmiofotoalbum.model.Photo;
+import org.lessons.java.springilmiofotoalbum.model.Role;
 import org.lessons.java.springilmiofotoalbum.model.User;
 import org.lessons.java.springilmiofotoalbum.repository.PhotoRepository;
 import org.lessons.java.springilmiofotoalbum.repository.UserRepository;
@@ -37,9 +38,7 @@ public class SuperadminController {
     // Parametro di ricerca è OPZIONALE perchè alla rotta si può accedere sia normalmente sia tramite ricerca
     @GetMapping
     public String index(@RequestParam Optional<String> search, Model model, Authentication authentication) {
-        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
-        User loggedUser = userRepository.findById(principal.getId()).get();
-        if (loggedUser.getRoles().contains("SUPER_ADMIN")) {
+        if (testSuperAdmin(authentication)) {
             // Passo il risultato al model
             model.addAttribute("photoList", photoService.getPhotoListSuperAdmin(search));
             return "superadmin/index";
@@ -52,10 +51,8 @@ public class SuperadminController {
     @GetMapping("/showPhoto/{id}")
     // Prendo l'id dal path
     public String showPhoto(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes, Authentication authentication) {
-        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
-        User loggedUser = userRepository.findById(principal.getId()).get();
         try {
-            if (loggedUser.getRoles().contains("SUPER_ADMIN")) {
+            if (testSuperAdmin(authentication)) {
                 Photo photo = photoService.getPhotoById(id);
                 photo.setVisible(true);
                 photoRepository.save(photo);
@@ -73,10 +70,8 @@ public class SuperadminController {
     @GetMapping("/hiddenPhoto/{id}")
     // Prendo l'id dal path
     public String hiddenPhoto(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes, Authentication authentication) {
-        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
-        User loggedUser = userRepository.findById(principal.getId()).get();
         try {
-            if (loggedUser.getRoles().contains("SUPER_ADMIN")) {
+            if (testSuperAdmin(authentication)) {
                 Photo photo = photoService.getPhotoById(id);
                 photo.setVisible(false);
                 photoRepository.save(photo);
@@ -88,5 +83,18 @@ public class SuperadminController {
         } catch (PhotoNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
+    }
+
+    public boolean testSuperAdmin(Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
+        boolean isAdmin = false;
+        for (Role role : loggedUser.getRoles()) {
+            if (role.getName().equals("SUPER_ADMIN")) {
+                isAdmin = true;
+                break;
+            }
+        }
+        return isAdmin;
     }
 }
