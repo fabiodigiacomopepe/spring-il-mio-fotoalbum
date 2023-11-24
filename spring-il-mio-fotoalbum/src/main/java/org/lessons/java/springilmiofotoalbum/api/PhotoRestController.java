@@ -27,7 +27,7 @@ public class PhotoRestController {
         // Ritorno lista di foto
         // Visto che search è opzionale, se c'è lo uso
         // altrimenti passo stringa vuota
-        return photoService.getPhotoList(Optional.of(search.orElse("")));
+        return photoService.getPhotoListAPI(Optional.of(search.orElse("")));
     }
 
     // Rotta "/api/v1/photos/send" (POST)

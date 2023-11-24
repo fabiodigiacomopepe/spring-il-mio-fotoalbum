@@ -26,6 +26,17 @@ public class PhotoService {
         }
     }
 
+    public List<Photo> getPhotoListAPI(Optional<String> search) {
+        // Se è stato passato un parametro di ricerca
+        if (search.isPresent()) {
+            // Lo prendo con il .GET() e lo utilizzo per farmi ritornare una lista filtrata in base al nome
+            return photoRepository.findByTitleContainingIgnoreCaseAndVisibleTrue(search.get());
+        } else {
+            // Altrimenti ritorno lista completa
+            return photoRepository.findAllByVisibleTrue();
+        }
+    }
+
     public Photo getPhotoById(Integer id) throws PhotoNotFoundException {
         // Salvo in result in modo Optional perchè potrebbe non ritornare nulla
         Optional<Photo> result = photoRepository.findById(id);

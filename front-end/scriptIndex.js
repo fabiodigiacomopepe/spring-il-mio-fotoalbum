@@ -43,10 +43,7 @@ const renderPhotoList = (data) => {
 
 // Creo template literal per ogni foto e lo inietto in pagina
 function renderPhoto(element) {
-    if (!element.visible) {
-        infoPhoto = "";
-    } else {
-        infoPhoto = `
+    infoPhoto = `
         <div class="card" style="width: calc(100% / 3 - 15px); height: 380px;">
             <img src="${element.url}" class="card-img-top" alt="${element.title}"
                 style="max-height: 200px; object-fit: cover;">
@@ -55,7 +52,6 @@ function renderPhoto(element) {
                 <p class="card-text" style="overflow-y: auto; height: 60px;">${element.description}</p>
             </div>
         </div>`;
-    }
     return infoPhoto;
 };
 
