@@ -79,7 +79,7 @@ public class PhotoController {
 
     // Rotta "/photos/create" (POST)
     @PostMapping("/create")
-    public String createPost(Model model, @Valid @ModelAttribute("photo") Photo formPhoto, BindingResult bindingResult, Authentication authentication) {
+    public String createPost(Model model, @Valid @ModelAttribute("photo") Photo formPhoto, BindingResult bindingResult) {
         // Controllo se ci sono errori
         if (bindingResult.hasErrors()) {
             // Se ci sono ricarico la pagina mantendendo i dati (grazie al model)
@@ -94,12 +94,19 @@ public class PhotoController {
 
     // Rotta "/photos/edit/id <---(dinamico)" (GET)
     @GetMapping("/edit/{id}")
-    public String editGet(@PathVariable Integer id, Model model) {
+    public String editGet(@PathVariable Integer id, Model model, Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
+
         try {
             // Passo la photo con il model
             model.addAttribute("photo", photoService.getPhotoById(id));
             model.addAttribute("categoryList", categoryService.getAll());
-            return "administrations/create_edit";
+            if (Objects.equals(loggedUser.getId(), photoService.getPhotoById(id).getUser().getId())) {
+                return "administrations/create_edit";
+            } else {
+                return "redirect:/photos";
+            }
         } catch (PhotoNotFoundException e) {
             // Altrimenti lancio eccezione
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
