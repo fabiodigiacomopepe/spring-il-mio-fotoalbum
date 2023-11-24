@@ -37,6 +37,17 @@ public class PhotoService {
         }
     }
 
+    public List<Photo> getPhotoListSuperAdmin(Optional<String> search) {
+        // Se è stato passato un parametro di ricerca
+        if (search.isPresent()) {
+            // Lo prendo con il .GET() e lo utilizzo per farmi ritornare una lista filtrata in base al nome
+            return photoRepository.findByTitleContainingIgnoreCase(search.get());
+        } else {
+            // Altrimenti ritorno lista completa
+            return photoRepository.findAll();
+        }
+    }
+
     public Photo getPhotoById(Integer id) throws PhotoNotFoundException {
         // Salvo in result in modo Optional perchè potrebbe non ritornare nulla
         Optional<Photo> result = photoRepository.findById(id);
@@ -65,6 +76,7 @@ public class PhotoService {
         photoToEdit.setUrl(photo.getUrl());
         photoToEdit.setVisible(photo.isVisible());
         photoToEdit.setCategories(photo.getCategories());
+        photoToEdit.setUser(photo.getUser());
         // Salvo la photo
         // Metodo .save salva ciò che riceve. Se i campi nel form mancano, li lascia vuoti (non si comporta come update)
         return photoRepository.save(photoToEdit);
