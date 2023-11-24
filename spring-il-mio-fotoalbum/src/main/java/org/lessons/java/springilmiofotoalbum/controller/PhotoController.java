@@ -3,10 +3,14 @@ package org.lessons.java.springilmiofotoalbum.controller;
 import jakarta.validation.Valid;
 import org.lessons.java.springilmiofotoalbum.exceptions.PhotoNotFoundException;
 import org.lessons.java.springilmiofotoalbum.model.Photo;
+import org.lessons.java.springilmiofotoalbum.model.User;
+import org.lessons.java.springilmiofotoalbum.repository.UserRepository;
+import org.lessons.java.springilmiofotoalbum.security.DatabaseUserDetails;
 import org.lessons.java.springilmiofotoalbum.service.CategoryService;
 import org.lessons.java.springilmiofotoalbum.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,12 +29,17 @@ public class PhotoController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // Rotta "/photos"
     // Parametro di ricerca è OPZIONALE perchè alla rotta si può accedere sia normalmente sia tramite ricerca
     @GetMapping
-    public String index(@RequestParam Optional<String> search, Model model) {
+    public String index(@RequestParam Optional<String> search, Model model, Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
         // Passo il risultato al model
-        model.addAttribute("photoList", photoService.getPhotoList(search));
+        model.addAttribute("photoList", photoService.getPhotoList(search, loggedUser.getId()));
         return "administrations/list";
     }
 

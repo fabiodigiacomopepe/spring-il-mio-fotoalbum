@@ -9,9 +9,11 @@ import java.util.List;
 public interface PhotoRepository extends JpaRepository<Photo, Integer> {
     // Query SQL automatica in base a nome del metodo
     // Con @Query si possono fare anche personalizzate
-    List<Photo> findByTitleContainingIgnoreCase(String nameKeyword);
+    List<Photo> findByTitleContainingIgnoreCaseAndUserId(String nameKeyword, Integer userId);
 
     List<Photo> findByTitleContainingIgnoreCaseAndVisibleTrue(String nameKeyword);
 
     List<Photo> findAllByVisibleTrue();
+
+    List<Photo> findByUserId(Integer userId);
 }
