@@ -147,15 +147,22 @@ public class PhotoController {
     // Parametri in ingresso:
     // @PathVariable Integer id -> per gestire quale elemento eliminare
     // RedirectAttributes redirectAttributes -> attributi che ci sono solo nel redirect
-    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Integer id, RedirectAttributes redirectAttributes, Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
+
         try {
             // Provo a prendere photo in base a id
             Photo photoToDelete = photoService.getPhotoById(id);
-            // Elimino photo per id
-            photoService.deletePhoto(id);
-            // Passo il messaggio durante il redirect
-            redirectAttributes.addFlashAttribute("message", "Foto '" + photoToDelete.getTitle() + "' eliminata correttamente!");
+
+            if (Objects.equals(loggedUser.getId(), photoToDelete.getUser().getId())) {
+                // Elimino photo per id
+                photoService.deletePhoto(id);
+                // Passo il messaggio durante il redirect
+                redirectAttributes.addFlashAttribute("message", "Foto '" + photoToDelete.getTitle() + "' eliminata correttamente!");
+            }
             return "redirect:/photos";
+
         } catch (PhotoNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
