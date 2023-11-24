@@ -22,7 +22,7 @@
                 <h2 style="margin-bottom: 20px;">Contattami</h2>
                 <div class="mb-3">
                     <label for="emailForm" class="form-label">Email</label>
-                    <input id="emailForm" type="text" class="form-control @error('emailForm') is-invalid @enderror"
+                    <input id="emailForm" type="text" class="form-control @error('emailForm') @enderror"
                         name="emailForm" placeholder="Inserisci la tua email">
                     <span id="emailForm-error" class="invalid-feedback" role="alert">
                         <strong></strong>
@@ -30,8 +30,8 @@
                 </div>
                 <div class="mb-3">
                     <label for="bodyEmail" class="form-label">Messaggio</label>
-                    <textarea id="bodyEmail" class="form-control @error('bodyEmail') is-invalid @enderror"
-                        name="bodyEmail" placeholder="Scrivi qui..." rows="3"></textarea>
+                    <textarea id="bodyEmail" class="form-control @error('bodyEmail') @enderror" name="bodyEmail"
+                        placeholder="Scrivi qui..." rows="3"></textarea>
                     <span id="bodyEmail-error" class="invalid-feedback" role="alert">
                         <strong></strong>
                     </span>
