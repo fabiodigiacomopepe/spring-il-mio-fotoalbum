@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/resources :: headResources('Message List')"></head>
+<body>
+<nav th:replace="fragments/navbar :: topNavbar('messages')"></nav>
+<div class="container">
+    <h1 style="margin: 40px 0;">Lista Messaggi</h1>
+
+    <div th:if="${messageList.empty}" class="alert alert-info" style="margin-top: 30px;">La lista dei messaggi è
+        vuota
+    </div>
+
+    <table class="table" th:if="${not messageList.empty}" style="width: 100%;">
+        <tbody>
+        <tr th:each="message : ${messageList}">
+            <td th:text="${message.senderEmail}">
+            <td th:text="${message.body}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script th:replace="fragments/resources :: jsResources"></script>
+</body>
+</html>
