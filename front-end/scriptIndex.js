@@ -5,7 +5,7 @@ const apiUrl = 'http://localhost:8080/api/v1/photos';
 const root = document.getElementById("root");
 
 // Seleziono tasto cerca e input di ricerca
-const submit = document.getElementById('tasto_cerca');
+const submit = document.getElementById('button_search');
 const input = document.getElementById('search');
 
 // Dichiaro variabili da riempire con template literal successivamente
@@ -69,7 +69,7 @@ submit.addEventListener('click', (event) => {
 getPhotos();
 
 // Seleziono FORM
-const form = document.getElementById('formContatto');
+const form = document.getElementById('formContact');
 
 // Funzione che parte al click sul pulsante INVIA
 form.addEventListener('submit', async function (event) {
@@ -78,26 +78,72 @@ form.addEventListener('submit', async function (event) {
 
     // Prendo i dati dal form e li salvo in delle variabili
     const formData = new FormData(form);
-    const senderEmail = formData.get('senderEmail');
-    const body = formData.get('body');
+    const emailForm = formData.get('emailForm');
+    const bodyEmail = formData.get('bodyEmail');
 
-    // Trasformo tutto in JSON
-    const jsonData = {
-        senderEmail: senderEmail,
-        body: body,
-    };
+    if (validateForm()) {
+        // Trasformo tutto in JSON
+        const jsonData = {
+            senderEmail: emailForm,
+            body: bodyEmail,
+        };
 
-    const config = {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
 
-    // Invio al RestController su Java per creare nuova messaggio
-    try {
-        await axios.post(apiUrl + '/send', JSON.stringify(jsonData), config);
-        window.location.href = '/front-end/index.html';
-    } catch (error) {
-        console.error(error);
+        // Invio al RestController su Java per creare nuova messaggio
+        try {
+            await axios.post(apiUrl + '/send', JSON.stringify(jsonData), config);
+            window.location.href = '/front-end/index.html';
+        } catch (error) {
+            console.error(error);
+        }
     }
 });
+
+function validateForm() {
+    let isValid = true;
+
+    // Validazione del campo "emailForm"
+    const emailValue = emailForm.value.trim();
+    if (emailValue === "") {
+        isValid = false;
+        document.getElementById("emailForm-error").innerHTML = "Il campo 'Email' è obbligatorio.";
+        emailForm.classList.add("is-invalid");
+    } else if (!isValidEmail(emailValue)) {
+        isValid = false;
+        document.getElementById("emailForm-error").innerHTML = "Inserisci un indirizzo email valido.";
+        emailForm.classList.add("is-invalid");
+    } else {
+        document.getElementById("emailForm-error").innerHTML = "";
+        emailForm.classList.remove("is-invalid");
+    }
+
+    // Validazione del campo "bodyEmail"
+    const nameValue = bodyEmail.value.trim();
+    if (nameValue === "") {
+        isValid = false;
+        document.getElementById("bodyEmail-error").innerHTML = "Il campo 'Messaggio' è obbligatorio.";
+        bodyEmail.classList.add("is-invalid");
+    }
+    else if (nameValue.length < 3) {
+        isValid = false;
+        document.getElementById("bodyEmail-error").innerHTML = "Il campo 'Messaggio' deve contenere almeno 3 caratteri";
+        bodyEmail.classList.add("is-invalid");
+    }
+    else {
+        document.getElementById("bodyEmail-error").innerHTML = "";
+        bodyEmail.classList.remove("is-invalid");
+    }
+
+    return isValid;
+}
+
+function isValidEmail(email) {
+    console.log("sdfgsd");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
