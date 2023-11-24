@@ -1,20 +1,16 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
-<head th:insert="fragments/resources :: headResources('Photo List')"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/resources :: headResources('Super Admin')"></head>
 <body>
-<nav th:replace="fragments/navbar :: topNavbar('photos')"></nav>
+<nav th:replace="fragments/navbar :: topNavbar('superadmin')"></nav>
 <div class="container">
     <div th:if="${message !=null}" class="alert alert-success alert-dismissible fade show">
         <span th:text="${message}"></span>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    <h1 style="margin-top: 40px;">Lista Foto</h1>
-    <div class="d-flex align-items-center justify-content-between">
-        <div class="my-3">
-            <a th:href="@{/photos/create}" class="btn btn-light" sec:authorize="hasAuthority('ADMIN')">Aggiungi nuova
-                foto</a>
-        </div>
-        <form th:action="@{/photos}" method="GET">
+    <div class="d-flex align-items-center justify-content-between" style="margin-top: 40px;">
+        <h1>Lista Foto</h1>
+        <form th:action="@{/superadmin}" method="GET">
             <div class="input-group">
                 <input
                         type="text"
@@ -40,17 +36,14 @@
                 <p class="card-text" th:text="${photo.description}" style="overflow-y: auto; height: 60px;"></p>
             </div>
             <div class="d-flex justify-content-evenly" style="margin-bottom: 20px;">
-                <a th:href="@{/photos/show/{id}(id=${photo.id})}" class="btn btn-dark">Visualizza</a>
-                <a th:href="@{/photos/edit/{id}(id=${photo.id})}" class="btn btn-dark">Modifica</a>
-                <form method="POST" th:action="@{/photos/delete/{id}(id=${photo.id})}"
-                      onsubmit="return confirm('Sei sicuro?')" sec:authorize="hasAuthority('ADMIN')">
-                    <button type="submit" id="pulsante_elimina" class="btn btn-dark">Elimina</button>
-                </form>
+                <a th:if="${!photo.visible}" th:href="@{/superadmin/showPhoto/{id}(id=${photo.id})}"
+                   class="btn btn-primary">Visualizza</a>
+                <a th:if="${photo.visible}" th:href="@{/superadmin/hiddenPhoto/{id}(id=${photo.id})}"
+                   class="btn btn-dark">Nascondi</a>
             </div>
         </div>
     </div>
 </div>
-
 <script th:replace="fragments/resources :: jsResources"></script>
 </body>
 </html>

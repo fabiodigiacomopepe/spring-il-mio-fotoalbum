@@ -26,6 +26,10 @@
                     <a class="nav-link" th:classAppend="${area == 'users' ? 'active' : ''}"
                        th:href="@{/users}">Utenti</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasAuthority('SUPER_ADMIN')">
+                    <a class="nav-link" th:classAppend="${area == 'superadmin' ? 'active' : ''}"
+                       th:href="@{/superadmin}">Super Admin</a>
+                </li>
             </ul>
             <div class="text-light">
                 <span sec:authentication="name" style="margin-right:15px; color: black;"></span>
