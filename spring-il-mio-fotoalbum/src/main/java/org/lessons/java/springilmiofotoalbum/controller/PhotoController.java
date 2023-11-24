@@ -66,16 +66,20 @@ public class PhotoController {
 
     // Rotta "/photos/create" (GET)
     @GetMapping("/create")
-    public String createGet(Model model) {
+    public String createGet(Model model, Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
+
         // Istanzio un nuovo oggetto Photo e lo passo con il model
         model.addAttribute("photo", new Photo());
         model.addAttribute("categoryList", categoryService.getAll());
+        model.addAttribute("userId", loggedUser.getId());
         return "administrations/create_edit";
     }
 
     // Rotta "/photos/create" (POST)
     @PostMapping("/create")
-    public String createPost(Model model, @Valid @ModelAttribute("photo") Photo formPhoto, BindingResult bindingResult) {
+    public String createPost(Model model, @Valid @ModelAttribute("photo") Photo formPhoto, BindingResult bindingResult, Authentication authentication) {
         // Controllo se ci sono errori
         if (bindingResult.hasErrors()) {
             // Se ci sono ricarico la pagina mantendendo i dati (grazie al model)

@@ -51,6 +51,14 @@
                    th:text="${#strings.capitalize(category.name)}"></label>
         </div>
 
+        <input type="hidden"
+               class="form-control"
+               id="user_id"
+               th:value="${userId}"
+               name="user"
+               th:errorClass="is-invalid"
+        >
+
         <div class="mt-4 mb-5">
             <button class="btn btn-light" type="submit">Salva</button>
             <a th:href="@{/photos}" class="btn btn-light">Torna indietro</a>
