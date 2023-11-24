@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -46,11 +47,18 @@ public class PhotoController {
     // Rotta "/photos/show/id <---(dinamico)"
     @GetMapping("/show/{id}")
     // Prendo l'id dal path
-    public String show(@PathVariable Integer id, Model model) {
+    public String show(@PathVariable Integer id, Model model, Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
+
         try {
             Photo photo = photoService.getPhotoById(id);
             model.addAttribute("photo", photo);
-            return "administrations/show";
+            if (Objects.equals(loggedUser.getId(), photo.getUser().getId())) {
+                return "administrations/show";
+            } else {
+                return "redirect:/photos";
+            }
         } catch (PhotoNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
