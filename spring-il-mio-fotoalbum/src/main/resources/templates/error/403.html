@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="fragments/resources :: headResources('Error 403')"></head>
+<body>
+<div class="container">
+    <h1 style="margin-top: 50px;">Non sei autorizzato ad accedere poichè non sei un admin.</h1>
+    <a style="margin-top: 30px;" th:href="@{/logout}" class="btn btn-light">Torna indietro</a>
+</div>
+<script th:replace="fragments/resources :: jsResources"></script>
+</body>
+</html>
