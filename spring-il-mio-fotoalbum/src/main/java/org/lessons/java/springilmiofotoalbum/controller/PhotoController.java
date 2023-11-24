@@ -103,6 +103,7 @@ public class PhotoController {
             model.addAttribute("photo", photoService.getPhotoById(id));
             model.addAttribute("categoryList", categoryService.getAll());
             if (Objects.equals(loggedUser.getId(), photoService.getPhotoById(id).getUser().getId())) {
+                model.addAttribute("userId", photoService.getPhotoById(id).getUser().getId());
                 return "administrations/create_edit";
             } else {
                 return "redirect:/photos";
