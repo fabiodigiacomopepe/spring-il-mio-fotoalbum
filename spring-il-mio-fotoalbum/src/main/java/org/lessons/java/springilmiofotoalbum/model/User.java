@@ -1,10 +1,13 @@
 package org.lessons.java.springilmiofotoalbum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,6 +30,10 @@ public class User {
     // Con fetch = FetchType.EAGER carico tutto
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
+
+    @JsonIgnore   // Per non cadere in RICORSIONE (LOOP) !!
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<Photo> photos = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -74,5 +81,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Photo> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photo> photos) {
+        this.photos = photos;
     }
 }
