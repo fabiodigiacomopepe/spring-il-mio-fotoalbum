@@ -1,11 +1,13 @@
 package org.lessons.java.springilmiofotoalbum.service;
 
+import org.lessons.java.springilmiofotoalbum.dto.PhotoDto;
 import org.lessons.java.springilmiofotoalbum.exceptions.PhotoNotFoundException;
 import org.lessons.java.springilmiofotoalbum.model.Photo;
 import org.lessons.java.springilmiofotoalbum.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,13 +69,34 @@ public class PhotoService {
         return photoRepository.save(photo);
     }
 
+    public Photo createPhoto(PhotoDto photoDto) throws IOException {
+        // Converto photoDto in photo
+        Photo photo = convertDtoToPhoto(photoDto);
+        // Salvo la photo sul DB
+        return createPhoto(photo);
+    }
+
+    private static Photo convertDtoToPhoto(PhotoDto photoDto) throws IOException {
+        Photo photo = new Photo();
+        photo.setTitle(photoDto.getTitle());
+        photo.setDescription(photoDto.getDescription());
+        photo.setVisible(photoDto.isVisible());
+        photo.setCategories(photoDto.getCategories());
+        photo.setUser(photoDto.getUser());
+        if (photoDto.getCoverFile() != null && !photoDto.getCoverFile().isEmpty()) {
+            // Trasformo MultipartFile in byte[]
+            byte[] bytes = photoDto.getCoverFile().getBytes();
+            photo.setCover(bytes);
+        }
+        return photo;
+    }
+
     public Photo editPhoto(Photo photo) throws PhotoNotFoundException {
         // Provo a prendere photo in base a id
         Photo photoToEdit = getPhotoById(photo.getId());
         // Valorizzo con i setter i vari parametri passando quelli ricevuti dal form
         photoToEdit.setTitle(photo.getTitle());
         photoToEdit.setDescription(photo.getDescription());
-        photoToEdit.setUrl(photo.getUrl());
         photoToEdit.setVisible(photo.isVisible());
         photoToEdit.setCategories(photo.getCategories());
         photoToEdit.setUser(photo.getUser());

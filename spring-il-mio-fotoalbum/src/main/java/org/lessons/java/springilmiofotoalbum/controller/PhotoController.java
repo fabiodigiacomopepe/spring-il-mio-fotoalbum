@@ -1,6 +1,7 @@
 package org.lessons.java.springilmiofotoalbum.controller;
 
 import jakarta.validation.Valid;
+import org.lessons.java.springilmiofotoalbum.dto.PhotoDto;
 import org.lessons.java.springilmiofotoalbum.exceptions.PhotoNotFoundException;
 import org.lessons.java.springilmiofotoalbum.model.Photo;
 import org.lessons.java.springilmiofotoalbum.model.User;
@@ -14,10 +15,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -71,7 +74,7 @@ public class PhotoController {
         User loggedUser = userRepository.findById(principal.getId()).get();
 
         // Istanzio un nuovo oggetto Photo e lo passo con il model
-        model.addAttribute("photo", new Photo());
+        model.addAttribute("photo", new PhotoDto());
         model.addAttribute("categoryList", categoryService.getAll());
         model.addAttribute("userId", loggedUser.getId());
         return "administrations/create_edit";
@@ -79,16 +82,28 @@ public class PhotoController {
 
     // Rotta "/photos/create" (POST)
     @PostMapping("/create")
-    public String createPost(Model model, @Valid @ModelAttribute("photo") Photo formPhoto, BindingResult bindingResult) {
+    public String createPost(Model model, @Valid @ModelAttribute("photo") PhotoDto formPhoto, BindingResult bindingResult, Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
+
         // Controllo se ci sono errori
         if (bindingResult.hasErrors()) {
             // Se ci sono ricarico la pagina mantendendo i dati (grazie al model)
             model.addAttribute("categoryList", categoryService.getAll());
+            model.addAttribute("userId", loggedUser.getId());
             return "administrations/create_edit";
         }
         // Recupero l'oggetto Pohoto dal model e lo salvo in formPhoto
         // Creo una nuovo oggetto Photo chiamato savedPhoto e passo i dati dal form (formPhoto)
-        Photo savedPhoto = photoService.createPhoto(formPhoto);
+        Photo savedPhoto = null;
+        try {
+            savedPhoto = photoService.createPhoto(formPhoto);
+        } catch (IOException e) {
+            model.addAttribute("categoryList", categoryService.getAll());
+            model.addAttribute("userId", loggedUser.getId());
+            bindingResult.addError(new FieldError("photo", "coverFile", null, false, null, null, "Unable to save file"));
+            return "administrations/create_edit";
+        }
         return "redirect:/photos/show/" + savedPhoto.getId();
     }
 
@@ -128,10 +143,15 @@ public class PhotoController {
             @ModelAttribute("photo")
             Photo formPhoto,
             BindingResult bindingResult,
-            Model model) {
+            Model model,
+            Authentication authentication) {
+        DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
+        User loggedUser = userRepository.findById(principal.getId()).get();
+        
         if (bindingResult.hasErrors()) {
             // Se ci sono errori ricarico la pagina
             model.addAttribute("categoryList", categoryService.getAll());
+            model.addAttribute("userId", loggedUser.getId());
             return "/administrations/create_edit";
         }
         try {

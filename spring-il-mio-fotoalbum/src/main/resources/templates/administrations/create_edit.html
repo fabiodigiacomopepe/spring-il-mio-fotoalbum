@@ -12,7 +12,12 @@
             th:action="@{${actionUrl}}"
             th:object="${photo}"
             class="row"
+            enctype="multipart/form-data"
     >
+        <div style="margin-bottom: 10px;">
+            <input type="file" class="form-control" id="coverFile" name="coverFile">
+        </div>
+
         <div class="col-9" th:insert="fragments/components :: formField('text', 'Titolo', 'title')"></div>
 
         <div class="col-3">
@@ -34,8 +39,6 @@
                 </div>
             </div>
         </div>
-
-        <div th:insert="fragments/components :: formField('text', 'URL Foto', 'url')"></div>
 
         <div th:insert="fragments/components :: formField('textarea', 'Descrizione', 'description')"></div>
 
