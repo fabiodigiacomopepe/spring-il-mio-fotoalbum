@@ -115,7 +115,7 @@ public class PhotoController {
 
         try {
             // Passo la photo con il model
-            model.addAttribute("photo", photoService.getPhotoById(id));
+            model.addAttribute("photo", photoService.getPhotoDtoById(id));
             model.addAttribute("categoryList", categoryService.getAll());
             if (Objects.equals(loggedUser.getId(), photoService.getPhotoById(id).getUser().getId())) {
                 model.addAttribute("userId", photoService.getPhotoById(id).getUser().getId());
@@ -141,13 +141,13 @@ public class PhotoController {
             @PathVariable Integer id,
             @Valid
             @ModelAttribute("photo")
-            Photo formPhoto,
+            PhotoDto formPhoto,
             BindingResult bindingResult,
             Model model,
             Authentication authentication) {
         DatabaseUserDetails principal = (DatabaseUserDetails) authentication.getPrincipal();
         User loggedUser = userRepository.findById(principal.getId()).get();
-        
+
         if (bindingResult.hasErrors()) {
             // Se ci sono errori ricarico la pagina
             model.addAttribute("categoryList", categoryService.getAll());
@@ -159,6 +159,11 @@ public class PhotoController {
             return "redirect:/photos/show/" + savedPhoto.getId();
         } catch (PhotoNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (IOException e) {
+            model.addAttribute("categoryList", categoryService.getAll());
+            model.addAttribute("userId", loggedUser.getId());
+            bindingResult.addError(new FieldError("photo", "coverFile", null, false, null, null, "Unable to save file"));
+            return "administrations/create_edit";
         }
     }
 

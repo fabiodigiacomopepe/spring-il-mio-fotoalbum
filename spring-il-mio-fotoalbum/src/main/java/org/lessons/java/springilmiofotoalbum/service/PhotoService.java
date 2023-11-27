@@ -77,18 +77,43 @@ public class PhotoService {
     }
 
     private static Photo convertDtoToPhoto(PhotoDto photoDto) throws IOException {
+        // Creo una nuova photo
         Photo photo = new Photo();
+        // Setto alla photo ciò che ricevo da photoDto
         photo.setTitle(photoDto.getTitle());
         photo.setDescription(photoDto.getDescription());
         photo.setVisible(photoDto.isVisible());
         photo.setCategories(photoDto.getCategories());
         photo.setUser(photoDto.getUser());
+        photo.setId(photoDto.getId());
         if (photoDto.getCoverFile() != null && !photoDto.getCoverFile().isEmpty()) {
             // Trasformo MultipartFile in byte[]
             byte[] bytes = photoDto.getCoverFile().getBytes();
             photo.setCover(bytes);
         }
+        // Ritorno la photo
         return photo;
+    }
+
+    private static PhotoDto convertPhotoToDto(Photo photo) {
+        // Creo una nuova photoDto
+        PhotoDto photoDto = new PhotoDto();
+        // Setto alla photoDto ciò che ricevo da photo
+        photoDto.setTitle(photo.getTitle());
+        photoDto.setDescription(photo.getDescription());
+        photoDto.setVisible(photo.isVisible());
+        photoDto.setCategories(photo.getCategories());
+        photoDto.setUser(photo.getUser());
+        photoDto.setId(photo.getId());
+        // Ritorno la photoDto
+        return photoDto;
+    }
+
+    public PhotoDto getPhotoDtoById(Integer id) throws PhotoNotFoundException {
+        // Cerco la photo
+        Photo photo = getPhotoById(id);
+        // Ritorno una photo convertita in photoDto
+        return convertPhotoToDto(photo);
     }
 
     public Photo editPhoto(Photo photo) throws PhotoNotFoundException {
@@ -100,9 +125,19 @@ public class PhotoService {
         photoToEdit.setVisible(photo.isVisible());
         photoToEdit.setCategories(photo.getCategories());
         photoToEdit.setUser(photo.getUser());
+        if (photo.getCover() != null && photo.getCover().length > 0) {
+            photoToEdit.setCover(photo.getCover());
+        }
         // Salvo la photo
         // Metodo .save salva ciò che riceve. Se i campi nel form mancano, li lascia vuoti (non si comporta come update)
         return photoRepository.save(photoToEdit);
+    }
+
+    public Photo editPhoto(PhotoDto photoDto) throws IOException {
+        // Converto photoDto in photo
+        Photo photo = convertDtoToPhoto(photoDto);
+        // Chiamo il metodo edit passando una photo
+        return editPhoto(photo);
     }
 
     public void deletePhoto(Integer id) {

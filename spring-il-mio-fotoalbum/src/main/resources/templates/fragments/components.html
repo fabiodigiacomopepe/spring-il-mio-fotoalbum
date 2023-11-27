@@ -6,7 +6,7 @@
            class="form-label"
            th:text="${label}">
     </label>
-    <th:block th:if="${type == 'text'}">
+    <th:block th:if="${type == 'text' || type == 'file'}">
         <input th:type="${type}"
                class="form-control"
                th:id="${fieldName}"

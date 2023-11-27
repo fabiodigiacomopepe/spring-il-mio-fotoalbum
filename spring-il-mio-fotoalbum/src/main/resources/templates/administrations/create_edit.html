@@ -14,9 +14,8 @@
             class="row"
             enctype="multipart/form-data"
     >
-        <div style="margin-bottom: 10px;">
-            <input type="file" class="form-control" id="coverFile" name="coverFile">
-        </div>
+        <div style="margin-bottom: 10px;"
+             th:insert="fragments/components :: formField('file', 'Immagine', 'coverFile')"></div>
 
         <div class="col-9" th:insert="fragments/components :: formField('text', 'Titolo', 'title')"></div>
 
