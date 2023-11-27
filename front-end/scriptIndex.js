@@ -11,7 +11,10 @@ const input = document.getElementById('search');
 // Dichiaro variabili da riempire con template literal successivamente
 let contentAlbum;
 let contentSinglePhoto;
-let infoPhoto;
+let infoPhoto1;
+let infoPhoto2;
+let infoPhoto3;
+let infoPhotoFinal;
 
 // Ritorno lista di foto per metterle in pagina
 const getPhotos = async (search) => {
@@ -43,16 +46,16 @@ const renderPhotoList = (data) => {
 
 // Creo template literal per ogni foto e lo inietto in pagina
 function renderPhoto(element) {
-    infoPhoto = `
-        <div class="card" style="width: calc(100% / 3 - 15px); height: 380px;">
-            <img src="${element.url}" class="card-img-top" alt="${element.title}"
-                style="max-height: 200px; object-fit: cover;">
-            <div class="card-body">
-                <h5 class="card-title">${element.title}</h5>
-                <p class="card-text" style="overflow-y: auto; height: 60px;">${element.description}</p>
-            </div>
-        </div>`;
-    return infoPhoto;
+    infoPhoto1 = `<div class="card" style="width: calc(100% / 3 - 15px); height: 380px;">`;
+    infoPhoto2 = `<img src="http://localhost:8080/files/cover/${element.id}" onerror="this.src='${element.url}';" class="card-img-top" alt="${element.title}" style="max-height: 200px; object-fit: cover;">`
+    infoPhoto3 = `
+        <div class="card-body">
+            <h5 class="card-title">${element.title}</h5>
+            <p class="card-text" style="overflow-y: auto; height: 60px;">${element.description}</p>
+        </div>
+    </div>`;
+    infoPhotoFinal = infoPhoto1 + infoPhoto2 + infoPhoto3;
+    return infoPhotoFinal;
 };
 
 // Al click del pulsante cerca richiedo lista foto ma passando anche parametro di ricerca

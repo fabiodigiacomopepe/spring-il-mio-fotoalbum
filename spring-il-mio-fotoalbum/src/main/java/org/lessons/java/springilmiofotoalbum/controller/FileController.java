@@ -37,6 +37,5 @@ public class FileController {
             // Ritorno HTTP 404
             return ResponseEntity.notFound().build();
         }
-        // Ritorno byte[] della cover
     }
 }
