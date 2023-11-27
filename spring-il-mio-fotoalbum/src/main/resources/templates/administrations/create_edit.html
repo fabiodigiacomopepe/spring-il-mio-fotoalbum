@@ -14,43 +14,59 @@
             class="row"
             enctype="multipart/form-data"
     >
-        <div style="margin-bottom: 10px;"
-             th:insert="fragments/components :: formField('file', 'Immagine', 'coverFile')"></div>
-
-        <div class="col-9" th:insert="fragments/components :: formField('text', 'Titolo', 'title')"></div>
-
-        <div class="col-3">
-            <label class="form-label">Visibile</label>
-            <div class="d-flex align-items-center" style="position: relative; top: 8px;">
-                <div class="form-check" style="margin-right: 30px;">
-                    <input class="form-check-input" type="radio" name="visible" id="visible_yes" value="true"
-                           th:field="*{visible}">
-                    <label class="form-check-label" for="visible_yes">
-                        Sì
-                    </label>
+        <div class="d-flex justify-content-between align-times-center">
+            <div class="col-6">
+                <div style="margin-bottom: 10px;"
+                     th:insert="fragments/components :: formField('file', 'Immagine', 'coverFile')">
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="visible" id="visible_no" value="false"
-                           th:field="*{visible}">
-                    <label class="form-check-label" for="visible_no">
-                        No
-                    </label>
+
+                <div th:insert="fragments/components :: formField('text', 'Titolo', 'title')"></div>
+
+                <div>
+                    <label class="form-label" style="margin: 8px 0;">Visibile</label>
+                    <div class="d-flex align-items-center">
+                        <div class="form-check" style="margin-right: 30px;">
+                            <input class="form-check-input" type="radio" name="visible" id="visible_yes" value="true"
+                                   th:field="*{visible}">
+                            <label class="form-check-label" for="visible_yes">
+                                Sì
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="visible" id="visible_no" value="false"
+                                   th:field="*{visible}">
+                            <label class="form-check-label" for="visible_no">
+                                No
+                            </label>
+                        </div>
+                    </div>
                 </div>
+
+                <h3 style="margin-top: 20px;">Categorie</h3>
+                <div class="form-check" th:each="category : ${categoryList}" style="position: relative; left: 15px;">
+                    <input
+                            class="form-check-input"
+                            type="checkbox"
+                            th:value="${category.id}"
+                            th:id="|category_${category.id}|"
+                            th:field="*{categories}">
+                    <label class="form-check-label" th:for="|category_${category.id}|"
+                           th:text="${#strings.capitalize(category.name)}"></label>
+                </div>
+            </div>
+
+            <div th:if="${isEdit}" style="width: 45%; max-height: 335px; border-radius: 10px;" class="col-6">
+                <img th:if="${photoCover == null}" style="max-width: 100%"
+                     th:src="${photoUrl}"
+                     th:alt="${photo.title}">
+                <img th:unless="${photoCover == null}" style="max-width: 100%"
+                     th:src="@{/files/cover/{id}(id=${photo.id})}"
+                     th:alt="${photo.title}">
             </div>
         </div>
 
-        <div th:insert="fragments/components :: formField('textarea', 'Descrizione', 'description')"></div>
-
-        <h3 style="margin-top: 20px;">Categorie</h3>
-        <div class="form-check" th:each="category : ${categoryList}" style="position: relative; left: 15px;">
-            <input
-                    class="form-check-input"
-                    type="checkbox"
-                    th:value="${category.id}"
-                    th:id="|category_${category.id}|"
-                    th:field="*{categories}">
-            <label class="form-check-label" th:for="|category_${category.id}|"
-                   th:text="${#strings.capitalize(category.name)}"></label>
+        <div class="col-12" style="margin-top: 20px"
+             th:insert="fragments/components :: formField('textarea', 'Descrizione', 'description')">
         </div>
 
         <input type="hidden"

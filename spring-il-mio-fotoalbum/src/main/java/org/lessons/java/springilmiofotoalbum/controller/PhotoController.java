@@ -117,6 +117,10 @@ public class PhotoController {
             // Passo la photo con il model
             model.addAttribute("photo", photoService.getPhotoDtoById(id));
             model.addAttribute("categoryList", categoryService.getAll());
+            // Passo anche photoUrl e photoCover per capire quale foto mostrare
+            // (se quella con path da internet o quella caricata via file)
+            model.addAttribute("photoUrl", photoService.getPhotoById(id).getUrl());
+            model.addAttribute("photoCover", photoService.getPhotoById(id).getCover());
             if (Objects.equals(loggedUser.getId(), photoService.getPhotoById(id).getUser().getId())) {
                 model.addAttribute("userId", photoService.getPhotoById(id).getUser().getId());
                 return "administrations/create_edit";

@@ -17,8 +17,10 @@
         </div>
         <div style="width: 60%">
             <dd style="margin-right: 35px;">
-                <img style="max-width: 100%; object-fit: cover; border-radius: 20px;"
+                <img th:if="*{cover == null}" style="max-width: 100%; object-fit: cover; border-radius: 20px;"
                      th:src="*{url}" th:alt="*{title}">
+                <img th:unless="*{cover == null}" style="max-width: 100%; object-fit: cover; border-radius: 20px;"
+                     th:src="@{/files/cover/{photoId}(photoId=*{id})}" th:alt="*{title}">
             </dd>
         </div>
     </dl>
